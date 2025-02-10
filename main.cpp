@@ -1,39 +1,53 @@
 #include <iostream>
 
 class MyVector {
-public:
-	int m_size;
-	int* m_data;
+    int _size;
+    int _capacity;
+	int* _data;
     
+public:
     MyVector() {
-		m_size = 0;
-		m_data = nullptr;
+		_size = 0;
+		_capacity = 8;
+		_data = nullptr;
+	}
+	int& operator [] (int i) {
+	    return _data[i];
 	}
 	MyVector(int n, int initial) {
-		m_size = n;
-		m_data = new int[m_size];
-		for (int i = 0; i < m_size; i++) m_data[i] = initial;
+		_size = n;
+		_capacity = 2 * n; 
+		_data = new int[_capacity];
+		for (int i = 0; i < _size; i++) _data[i] = initial;
 	}
-	MyVector(const MyVector &v) {
-	    this->m_size = v.m_size;
-	    this->m_data = new int [v.m_size];
-	    for (int i = 0; i < this->m_size; i++) this->m_data[i] = v.m_data[i];
+	MyVector(MyVector &v) {
+	    this->_size = v.size();
+	    this->_capacity = v.capacity();
+	    this->_data = new int [v.capacity()];
+	    for (int i = 0; i < this->_size; i++) this->_data[i] = v[i];
 	}
 	~MyVector() {
-		delete[] m_data;
-		std::cout << "deleted " << GET_VARIABLE_NAME(this) << std::endl;
+		delete[] _data;
+		std::cout << "deleted " << this << std::endl;
 	}
 	void print() {
-		for (int i = 0; i < m_size; i++) {
-			std::cout << m_data[i] << " ";
+		for (int i = 0; i < _size; i++) {
+			std::cout << _data[i] << " ";
 		}
 		std::cout << std::endl;
 	}
-	MyVector& operator=(const MyVector& v) {
+	int size() {
+	    return _size;
+	}
+	int capacity() {
+	    return _capacity;
+	}
+	MyVector& operator = (MyVector& v) {
 	    if (this != &v) {
-	        this->m_size = v.m_size;
-	        this->m_data = new int [v.m_size];
-	        for (int i = 0; i < this->m_size; i++) this->m_data[i] = v.m_data[i];
+	        this->_size = v.size();
+	        this->_capacity = v.capacity();
+	        this->_data = new int [v.capacity()];
+	        for (int i = 0; i < this->_size; i++) this->_data[i] = v[i];
 	    }
 	    return *this;
 	}
@@ -41,14 +55,14 @@ public:
 
 int main() {
 	MyVector a(5, 29);
-	a.m_data[1] = 100;
-	a.m_data[2] = 3000;
-	a.print();
-	MyVector b = a;
-	// MyVector b(a);
-	b.m_size = 3;
-	b.m_data[1] = 777;
+	MyVector b;
+	MyVector c(a);
+	MyVector d;
+	d = a;
+	a[1] = 1;
 	a.print();
 	b.print();
+	c.print();
+	d.print();
 	return 0;
 }
